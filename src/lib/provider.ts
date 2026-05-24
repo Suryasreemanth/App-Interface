@@ -506,8 +506,9 @@ export default function App() {
   }
 }
 
-export function getLanguageModel() {
+export function getLanguageModel(modelId?: string) {
   const apiKey = process.env.ANTHROPIC_API_KEY?.trim();
+  const model = modelId || MODEL;
 
   if (!apiKey || apiKey === "your-api-key-here") {
     console.log(
@@ -515,8 +516,8 @@ export function getLanguageModel() {
         "Using the mock provider — responses will be canned. " +
         "Set a real key in .env to generate components with Claude."
     );
-    return new MockLanguageModel("mock-" + MODEL);
+    return new MockLanguageModel("mock-" + model);
   }
 
-  return anthropic(MODEL);
+  return anthropic(model);
 }

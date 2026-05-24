@@ -13,7 +13,8 @@ export async function POST(req: Request) {
     messages,
     files,
     projectId,
-  }: { messages: any[]; files: Record<string, FileNode>; projectId?: string } =
+    model,
+  }: { messages: any[]; files: Record<string, FileNode>; projectId?: string; model?: string } =
     await req.json();
 
   messages.unshift({
@@ -28,11 +29,11 @@ export async function POST(req: Request) {
   const fileSystem = new VirtualFileSystem();
   fileSystem.deserializeFromNodes(files);
 
-  const model = getLanguageModel();
+  const languageModel = getLanguageModel(model);
   // Use fewer steps for mock provider to prevent repetition
   const isMockProvider = !process.env.ANTHROPIC_API_KEY;
   const result = streamText({
-    model,
+    model: languageModel,
     messages,
     maxTokens: 10_000,
     maxSteps: isMockProvider ? 4 : 40,

@@ -14,6 +14,7 @@ import { setHasAnonWork } from "@/lib/anon-work-tracker";
 interface ChatContextProps {
   projectId?: string;
   initialMessages?: Message[];
+  model?: string;
 }
 
 interface ChatContextType {
@@ -30,6 +31,7 @@ export function ChatProvider({
   children,
   projectId,
   initialMessages = [],
+  model,
 }: ChatContextProps & { children: ReactNode }) {
   const { fileSystem, handleToolCall } = useFileSystem();
 
@@ -45,6 +47,7 @@ export function ChatProvider({
     body: {
       files: fileSystem.serialize(),
       projectId,
+      model,
     },
     onToolCall: ({ toolCall }) => {
       handleToolCall(toolCall);
